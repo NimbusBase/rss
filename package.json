@@ -1,0 +1,24 @@
+{
+  "name": "rss",
+  "version": "0.0.1",
+  "description": "javascript library for rss ",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://luojieyy%40gmail.com@github.com/NimbusBase/rss.git"
+  },
+  "keywords": [
+    "rss"
+  ],
+  "author": "NimbusBase",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NimbusBase/rss/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2"
+  }
+}
