@@ -1,7 +1,8 @@
-Reader = 
+window.Reader = 
   tasks : 0
   worker : null
   cache : {}
+  cors : 'http://192.241.167.76:9292/'
   refresh : (sites)->
     if @tasks
       console.log 'refresh in progress'
@@ -16,6 +17,9 @@ Reader =
 
   get_rss : (url)->
     # get rss address from url
+    if url.indexOf('http') isnt 0
+      url = 'http://'+url
+    
     @cache.url = url
     original_url = url
     is_rss_url = false
@@ -112,3 +116,10 @@ Reader =
   save_feeds : (json,site)->
     console.log 'saving'
     return
+
+if Reader.cors isnt false
+  $.ajaxPrefilter(( options, originalOptions, jqXHR )->
+    options.url = options.url.replace('http://', "")
+    options.url = Reader.cors+options.url
+    console.log("option.url", options.url)
+  )
