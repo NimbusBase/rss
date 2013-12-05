@@ -13,12 +13,6 @@ Reader =
       @.get_feeds(site)
 
     return
-  stop : ()->
-    # hide spinner
-    $('span.spinner').hide()
-    angular.element(document.getElementById('app_body')).scope().app_loading = false
-    angular.element(document.getElementById('app_body')).scope().$apply()
-    @spinner.hide() if @spinner
 
   get_rss : (url)->
     # get rss address from url
@@ -102,11 +96,11 @@ Reader =
         Accept : "text/xml; charset=UTF-8"
       success : (data)->
         log data
-        json = $.xmlToJSON(data)
-        if json.rss
-          _this.save_feeds(json.rss,site)
-        else
-          _this.save_feeds(json.feed,site)
+        # json = $.xmlToJSON(data)
+        # if json.rss
+        #   _this.save_feeds(json.rss,site)
+        # else
+        #   _this.save_feeds(json.feed,site)
       error : (req,msg,e)->
         log msg
         _this.tasks-- if _this.tasks>0
@@ -116,41 +110,5 @@ Reader =
       
     return
   save_feeds : (json,site)->
-    _this = this
-    
-    worker = new Worker('js/feed_loader.js')
-    worker.postMessage(JSON.stringify(json))
-    # process data back
-    worker.onmessage = (evt)->
-      log(JSON.parse(evt.data))
-      data = JSON.parse(evt.data)
-      # save site data
-      if data.site.title
-        if !data.site.icon
-          delete data.site.icon
-        
-        site.updateAttributes(data.site)
-      
-      # save feed data
-      FeedItem.batch_mode = true
-      FeedItem.on_batch_save = false
-
-      for feed,i in data.items
-        if i is data.items.length-1
-          FeedItem.on_batch_save = true
-        
-        item = FeedItem.findByAttribute('link',feed.link)
-        if !item
-          item = FeedItem.create(feed)
-        else
-          item.save()
-      # save batch
-      FeedItem.batch_mode = FeedItem.on_batch_save = false
-
-      _this.tasks-- if _this.tasks>0
-      if !_this.tasks
-        angular.element(document.getElementById('app_body')).scope().load()
-        _this.stop()
-      # terminate worker
-      worker.terminate()
-      return
+    console.log 'saving'
+    return

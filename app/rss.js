@@ -22,14 +22,6 @@
         this.get_feeds(site);
       }
     },
-    stop: function() {
-      $('span.spinner').hide();
-      angular.element(document.getElementById('app_body')).scope().app_loading = false;
-      angular.element(document.getElementById('app_body')).scope().$apply();
-      if (this.spinner) {
-        return this.spinner.hide();
-      }
-    },
     get_rss: function(url) {
       var config, is_feedburner_ok, is_rss_url, original_url, rss_tag_present, _this;
       this.cache.url = url;
