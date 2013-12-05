@@ -16,5 +16,14 @@ QUnit.begin(function(){
 	 
 	  equal( result, 4, "2 square equals 4" );
 	});
+
+	test('get feeds',function(){
+
+		ok(1,'feed content');
+	});
+
+	test('get icon',function(){
+		
+	})
 });
 

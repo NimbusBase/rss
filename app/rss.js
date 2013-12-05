@@ -95,7 +95,7 @@
       url = 'http://feeds.feedburner.com/' + url;
       return url;
     },
-    get_feeds: function(site) {
+    get_feeds: function(site, callback) {
       var link, _this;
       _this = this;
       if (site.link.indexOf('feeds.feedburner.com') !== -1) {
@@ -117,19 +117,9 @@
           return log(data);
         },
         error: function(req, msg, e) {
-          log(msg);
-          if (_this.tasks > 0) {
-            _this.tasks--;
-          }
-          if (!_this.tasks) {
-            angular.element(document.getElementById('app_body')).scope().load();
-            return _this.stop();
-          }
+          return log(msg);
         }
       });
-    },
-    save_feeds: function(json, site) {
-      console.log('saving');
     }
   };
 

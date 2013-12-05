@@ -83,7 +83,7 @@ window.Reader =
     url = 'http://feeds.feedburner.com/'+url
     url
 
-  get_feeds :  (site)->
+  get_feeds :  (site,callback)->
     # get feeds for site
     _this = @
     if site.link.indexOf('feeds.feedburner.com') isnt -1
@@ -107,14 +107,7 @@ window.Reader =
         #   _this.save_feeds(json.feed,site)
       error : (req,msg,e)->
         log msg
-        _this.tasks-- if _this.tasks>0
-        if !_this.tasks
-          angular.element(document.getElementById('app_body')).scope().load()
-          _this.stop()
       
-    return
-  save_feeds : (json,site)->
-    console.log 'saving'
     return
 
 if Reader.cors isnt false
