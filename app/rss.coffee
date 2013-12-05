@@ -83,7 +83,7 @@ window.Reader =
     url = 'http://feeds.feedburner.com/'+url
     url
 
-  get_feeds :  (site,callback)->
+  get_feeds :  (site,callback,on_error)->
     # get feeds for site
     _this = @
     if site.link.indexOf('feeds.feedburner.com') isnt -1
@@ -99,16 +99,68 @@ window.Reader =
       headers: 
         Accept : "text/xml; charset=UTF-8"
       success : (data)->
-        log data
-        # json = $.xmlToJSON(data)
-        # if json.rss
-        #   _this.save_feeds(json.rss,site)
-        # else
-        #   _this.save_feeds(json.feed,site)
+        if callback
+          callback(data)
+        
       error : (req,msg,e)->
-        log msg
+        if on_error
+          on_error(msg)
       
     return
+
+  get_icon : (url,callback)->
+    #url = feedItem.link
+    icon = ""
+
+    last = url.length-1
+    if url[last] is "/"
+      icon = url+"favicon.ico"
+    else
+      icon = url+"/favicon.ico"
+
+    icon = icon.replace('feeds.feedburner.com/',"").replace('?format=xml',"")
+
+    config = 
+      'url': icon,  
+      success: (data)->
+        if callback
+          callback(icon)
+
+      error: (data) ->
+        console.log("THERE IS NO ICON AT DEFAULT LOCATION")
+        config =
+          'url': url,  
+          success: (data)->
+            iframe = document.getElementById('parse-iframe')
+            document.body.removeChild(iframe) if iframe        
+            iframe = document.createElement("iframe");
+            iframe.id = 'parse-iframe'
+            iframe.style.display = 'none'
+            document.body.appendChild(iframe)
+            iframeDoc = document.getElementById('parse-iframe').contentWindow.document
+            iframeDoc.body.innerHTML = data   
+            nodeList = iframeDoc.getElementsByTagName("link")
+            for node in nodeList
+              if node.getAttribute("rel").toLowerCase() == "shortcut icon"
+                found_icon = node.getAttribute("href")
+                
+                #attach address
+                if found_icon[0..3] isnt "http"
+                  found_icon = feedSite.link + found_icon
+            if callback
+               callback(found_icon)
+            
+        $.ajax(config)
+
+    $.ajax(config)
+
+  get_first_image : (content)->
+    regexp = /<img\s*[^>]*\s*src='?(\S+)'?[^>]*>/
+    regexp.test(content)
+
+    first = RegExp.$1
+    first = first.replace('"', "").replace('"', "").replace("'", "").replace("'", "")
+    return first
 
 if Reader.cors isnt false
   $.ajaxPrefilter(( options, originalOptions, jqXHR )->

@@ -95,7 +95,7 @@
       url = 'http://feeds.feedburner.com/' + url;
       return url;
     },
-    get_feeds: function(site, callback) {
+    get_feeds: function(site, callback, on_error) {
       var link, _this;
       _this = this;
       if (site.link.indexOf('feeds.feedburner.com') !== -1) {
@@ -114,12 +114,77 @@
           Accept: "text/xml; charset=UTF-8"
         },
         success: function(data) {
-          return log(data);
+          if (callback) {
+            return callback(data);
+          }
         },
         error: function(req, msg, e) {
-          return log(msg);
+          if (on_error) {
+            return on_error(msg);
+          }
         }
       });
+    },
+    get_icon: function(url, callback) {
+      var config, icon, last;
+      icon = "";
+      last = url.length - 1;
+      if (url[last] === "/") {
+        icon = url + "favicon.ico";
+      } else {
+        icon = url + "/favicon.ico";
+      }
+      icon = icon.replace('feeds.feedburner.com/', "").replace('?format=xml', "");
+      config = {
+        'url': icon,
+        success: function(data) {
+          if (callback) {
+            return callback(icon);
+          }
+        },
+        error: function(data) {
+          console.log("THERE IS NO ICON AT DEFAULT LOCATION");
+          config = {
+            'url': url,
+            success: function(data) {
+              var found_icon, iframe, iframeDoc, node, nodeList, _i, _len;
+              iframe = document.getElementById('parse-iframe');
+              if (iframe) {
+                document.body.removeChild(iframe);
+              }
+              iframe = document.createElement("iframe");
+              iframe.id = 'parse-iframe';
+              iframe.style.display = 'none';
+              document.body.appendChild(iframe);
+              iframeDoc = document.getElementById('parse-iframe').contentWindow.document;
+              iframeDoc.body.innerHTML = data;
+              nodeList = iframeDoc.getElementsByTagName("link");
+              for (_i = 0, _len = nodeList.length; _i < _len; _i++) {
+                node = nodeList[_i];
+                if (node.getAttribute("rel").toLowerCase() === "shortcut icon") {
+                  found_icon = node.getAttribute("href");
+                  if (found_icon.slice(0, 4) !== "http") {
+                    found_icon = feedSite.link + found_icon;
+                  }
+                }
+              }
+              if (callback) {
+                return callback(found_icon);
+              }
+            }
+          };
+          return $.ajax(config);
+        }
+      };
+      return $.ajax(config);
+    },
+    get_first_image: function(content) {
+      var first, regexp;
+      regexp = /<img\s*[^>]*\s*src='?(\S+)'?[^>]*>/;
+      regexp.test(content);
+      first = RegExp.$1;
+      first = first.replace('"', "").replace('"', "").replace("'", "").replace("'", "");
+      return first;
     }
   };
 
