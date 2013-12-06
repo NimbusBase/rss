@@ -98,14 +98,14 @@
     get_feeds: function(site, callback, on_error) {
       var link, _this;
       _this = this;
-      if (site.link.indexOf('feeds.feedburner.com') !== -1) {
-        if (site.link.indexOf('?format=xml') === -1) {
-          link = site.link + '?format=xml';
+      if (site.indexOf('feeds.feedburner.com') !== -1) {
+        if (site.indexOf('?format=xml') === -1) {
+          link = site + '?format=xml';
         } else {
-          link = site.link;
+          link = site;
         }
       } else {
-        link = site.link;
+        link = site;
       }
       $.ajax({
         url: link,

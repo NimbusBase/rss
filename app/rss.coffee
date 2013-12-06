@@ -86,13 +86,13 @@ window.Reader =
   get_feeds :  (site,callback,on_error)->
     # get feeds for site
     _this = @
-    if site.link.indexOf('feeds.feedburner.com') isnt -1
-      if site.link.indexOf('?format=xml') is -1
-        link = site.link+'?format=xml'
+    if site.indexOf('feeds.feedburner.com') isnt -1
+      if site.indexOf('?format=xml') is -1
+        link = site+'?format=xml'
       else
-        link = site.link
+        link = site
     else
-      link = site.link
+      link = site
     $.ajax
       url : link
       dataType : 'xml'

@@ -9,7 +9,7 @@
     test('get feeds', function() {
       var url;
       url = Reader.get_rss('techcrunch.com');
-      return Reader.get_feed(url, function(data) {
+      return Reader.get_feeds(url, function(data) {
         if (data) {
           return ok(1, 'feed content length: ' + data.length);
         } else {

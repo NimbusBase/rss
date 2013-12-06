@@ -6,7 +6,7 @@ QUnit.begin(()->
 
 	test('get feeds',()->
 		url = Reader.get_rss('techcrunch.com')
-		Reader.get_feed(url,(data)->
+		Reader.get_feeds(url,(data)->
 			if data
 				ok(1,'feed content length: '+data.length)
 			else
