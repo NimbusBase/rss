@@ -5,21 +5,8 @@
     worker: null,
     cache: {},
     cors: 'http://192.241.167.76:9292/',
-    refresh: function(sites) {
-      var i, site, _i, _len;
-      if (this.tasks) {
-        console.log('refresh in progress');
-        return;
-      }
-      if (!sites) {
-        sites = FeedSite.all();
-      }
-      this.tasks = sites.length;
-      this.spin('Updating');
-      for (i = _i = 0, _len = sites.length; _i < _len; i = ++_i) {
-        site = sites[i];
-        this.get_feeds(site);
-      }
+    refresh: function(url, callback) {
+      return Reader.get_feeds(url, callback);
     },
     get_rss: function(url) {
       var config, is_feedburner_ok, is_rss_url, original_url, rss_tag_present, _this;

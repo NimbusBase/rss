@@ -3,18 +3,9 @@ window.Reader =
   worker : null
   cache : {}
   cors : 'http://192.241.167.76:9292/'
-  refresh : (sites)->
-    if @tasks
-      console.log 'refresh in progress'
-      return
-    sites = FeedSite.all() if !sites
-    @tasks = sites.length
-    @spin('Updating')
-    for site,i in sites
-      @.get_feeds(site)
-
-    return
-
+  refresh : (url,callback)->
+    Reader.get_feeds(url,callback)
+    
   get_rss : (url)->
     # get rss address from url
     if url.indexOf('http') isnt 0
