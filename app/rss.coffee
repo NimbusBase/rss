@@ -92,6 +92,8 @@ window.Reader =
     worker.onmessage = (evt)->
       feed = new JFeed(evt.data)
       console.log feed
+      if callback
+        callback(feed)
       
     return
 

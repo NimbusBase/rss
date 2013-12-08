@@ -5,14 +5,19 @@ test('get rss from url', function() {
   return ok(1, 'Rss retriving result:' + url);
 });
 
-test('get feeds', function() {
+asyncTest('get feeds', function() {
   var url;
   url = Reader.get_rss('techcrunch.com');
-  return Reader.get_feeds(url, function(data) {});
+  return Reader.get_feeds(url, function(data) {
+    console.log('back now');
+    ok(true, 'feeds get ' + data.items.length + ' items');
+    return start();
+  });
 });
 
-test('get icon', function() {
-  return Reader.get_icon('http://techcrunch.com', function(icon) {});
+asyncTest('get icon', function() {
+  return Reader.get_icon('http://techcrunch.com', function(icon) {
+    ok(true, 'icon retrived: ' + icon);
+    return start();
+  });
 });
-
-test('get first image', function() {});

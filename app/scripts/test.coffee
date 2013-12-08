@@ -4,19 +4,19 @@ test('get rss from url',()->
 	ok(1, 'Rss retriving result:'+url)
 )
 
-test('get feeds',()->
+asyncTest('get feeds',()->
 	url = Reader.get_rss('techcrunch.com')
 	Reader.get_feeds(url,(data)->
-		
+		console.log 'back now'
+		ok(true,'feeds get '+data.items.length+ ' items')
+		start()
 	)
 )
 
-test('get icon',()->
+asyncTest('get icon',()->
 	Reader.get_icon('http://techcrunch.com',(icon)->
-		
+		ok(true,'icon retrived: '+icon)
+		start()
 	)
 )
 
-test('get first image',()->
-	
-)

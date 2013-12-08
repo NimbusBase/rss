@@ -6,7 +6,6 @@ async = (config)->
 		config.url = cors_server+config.url
 
 	req = new XMLHttpRequest()
-	method = if config.method then config.method else 'get'
 	req.open('get',config.url,true)
 	req.onreadystatechange = ()->
 		if (req.readyState == 4 and req.status) 

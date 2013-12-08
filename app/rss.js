@@ -98,7 +98,10 @@ window.Reader = {
     worker.onmessage = function(evt) {
       var feed;
       feed = new JFeed(evt.data);
-      return console.log(feed);
+      console.log(feed);
+      if (callback) {
+        return callback(feed);
+      }
     };
   },
   get_icon: function(url, callback) {
