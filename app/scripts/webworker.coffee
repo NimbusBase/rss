@@ -16,7 +16,7 @@ async = (config)->
 this.onmessage = (evt)->
 	data = JSON.parse(evt.data)
 	async(
-		url : data.url
+		url : data
 		success : (res)->
 			postMessage(res)
 

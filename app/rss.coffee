@@ -5,7 +5,7 @@ window.Reader =
   cors : 'http://192.241.167.76:9292/'
   refresh : (url,callback)->
     Reader.get_feeds(url,callback)
-    
+
   get_rss : (url)->
     # get rss address from url
     if url.indexOf('http') isnt 0
@@ -84,18 +84,14 @@ window.Reader =
         link = site
     else
       link = site
-    $.ajax
-      url : link
-      dataType : 'xml'
-      headers: 
-        Accept : "text/xml; charset=UTF-8"
-      success : (data)->
-        if callback
-          callback(data)
-        
-      error : (req,msg,e)->
-        if on_error
-          on_error(msg)
+
+    # run with webworker
+    worker = new Worker('scripts/webworker.js')
+    worker.postMessage(JSON.stringify(site))
+    # process data back
+    worker.onmessage = (evt)->
+      feed = new JFeed(evt.data)
+      console.log feed
       
     return
 
