@@ -43,7 +43,7 @@ window.Reader =
         if icons
           icon_exp = new RegExp('href=[\'\"][^\'^\"]+')
           icon = icon_exp.exec(icons)[0].replace('href=','').replace('"','').replace("'",'')
-          if icon.indexOf('http://') is -1 or icon.indexOf('https://') is -1
+          if icon.indexOf('http') isnt 0
             icon = original_url+'/'+icon
           
           Reader.cache.icon = icon
@@ -61,7 +61,7 @@ window.Reader =
         console.log e
       $.ajax config
       if is_rss_url
-       return config.url.replace('?format=xml','')
+       return config.url
       else 
         return is_rss_url
     
@@ -87,11 +87,10 @@ window.Reader =
 
     # run with webworker
     worker = new Worker('scripts/webworker.js')
-    worker.postMessage(JSON.stringify(site))
+    worker.postMessage(JSON.stringify(link))
     # process data back
     worker.onmessage = (evt)->
       feed = new JFeed(evt.data)
-      console.log feed
       if callback
         callback(feed)
       
