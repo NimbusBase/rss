@@ -61,13 +61,14 @@ JFeed.prototype = {
     link: '',
     description: '',
     parse: function(xml) {
+        xml = jQuery.parseXML(xml);
 
-        if (jQuery('channel', xml).length == 1) {
+        if (jQuery('item', xml).length) {
 
             this.type = 'rss';
             var feedClass = new JRss(xml);
 
-        } else if (jQuery('feed', xml).length == 1) {
+        } else if (jQuery('entry', xml).length) {
 
             this.type = 'atom';
             var feedClass = new JAtom(xml);
@@ -96,15 +97,14 @@ function JAtom(xml) {
 JAtom.prototype = {
     
     _parse: function(xml) {
-    
-        var channel = jQuery('feed', xml).eq(0);
+        var channel = $(xml).find('feed').eq(0);
 
         this.version = '1.0';
-        this.title = jQuery(channel).find('title:first').text();
-        this.link = jQuery(channel).find('link:first').attr('href');
-        this.description = jQuery(channel).find('subtitle:first').text();
+        this.title = jQuery('title:first',channel).text();
+        this.link = jQuery('link:first',channel).attr('href');
+        this.description = jQuery('subtitle:first',channel).text();
         this.language = jQuery(channel).attr('xml:lang');
-        this.updated = jQuery(channel).find('updated:first').text();
+        this.updated = jQuery('updated:first',channel).text();
         
         this.items = new Array();
         
@@ -136,11 +136,10 @@ JRss.prototype  = {
     
         if(jQuery('rss', xml).length == 0) this.version = '1.0';
         else this.version = jQuery('rss', xml).eq(0).attr('version');
-		
-		//console.log(xml);
-		window.xml = xml;
-		
-        var channel = jQuery('channel', xml).eq(0);
+        
+        //console.log(xml);
+        window.xml = xml;
+        var channel = jQuery(xml).find('channel').eq(0);
     
         this.title = jQuery(channel).find('title:first').text();
         this.link = jQuery(channel).find('link:first').text();
@@ -161,8 +160,8 @@ JRss.prototype  = {
             item.description = jQuery(this).find('description').eq(0).text();
             item.updated = jQuery(this).find('pubDate').eq(0).text();
             if (jQuery(this).find('date') != null && jQuery(this).find('date').eq(0).text() != "" ) {
-            	//console.log("FIND date", jQuery(this).find('date').eq(0).text());
-            	item.updated = jQuery(this).find('date').eq(0).text();
+                //console.log("FIND date", jQuery(this).find('date').eq(0).text());
+                item.updated = jQuery(this).find('date').eq(0).text();
             };
             item.id = jQuery(this).find('guid').eq(0).text();
             item.author = jQuery(this).find('creator').eq(0).text();
